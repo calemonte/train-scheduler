@@ -21,19 +21,12 @@ function displayCurrentTime() {
     
 };
 
-// Function for updating next arrival time every minute.
-// function updateNextArrival() {
+// Execute callback when new child added to Firebase.
+setInterval(function() {
 
-//     setInterval(function() {
-//         $("#minutes-away").each(function(i) {
-//             this.text(minutesTillTrain);
-//         });
-//     }, 60000);
+    $("tbody").empty();
     
-// };
-
-// Exectuve function when new child added to Firebase
-database.ref().on("child_added", function(snapshot) {
+    database.ref().on("child_added", function(snapshot) {
 
     // Cahce reference to the snapshot value.
     var sv = snapshot.val();
@@ -49,8 +42,6 @@ database.ref().on("child_added", function(snapshot) {
     var minutesTillTrain = sv.frequency - timeApart;
     var nextTrain = current.add(minutesTillTrain, "minutes"); 
 
-    console.log("First Train: " + sv.firstTrain);
-
     // Create new table data entries with appropriate values.
     var originTD = $("<td>").text(sv.origin);
     var destinationTD = $("<td>").text(sv.destination);
@@ -65,6 +56,8 @@ database.ref().on("child_added", function(snapshot) {
     $("tbody").append(newRow);
 
 });
+
+}, 1000);
 
 // On click event handler for form submit.
 $("#submit").on("click", function (e) {
@@ -94,5 +87,3 @@ $("#submit").on("click", function (e) {
 });
 
 displayCurrentTime();
-updateNextArrival();
-
